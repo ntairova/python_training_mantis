@@ -18,13 +18,10 @@ class ProjectHelper:
     def delete_project(self, project):
         wd = self.app.wd
         self.go_to_project_page_with_project_list()
-        # select project
         wd.find_element_by_link_text(f'{project}').click()
-        # submit project creation
         wd.find_element_by_xpath("//input[@value='Delete Project']").click()
-        wd.get("http://localhost/mantisbt-1.2.20/manage_proj_delete.php")
+        #sleep(5)
         wd.find_element_by_xpath("//input[@value='Delete Project']").click()
-        wd.get("http://localhost/mantisbt-1.2.20/manage_proj_page.php")
 
     def open_add_new_project_page(self):
         wd = self.app.wd
@@ -42,35 +39,23 @@ class ProjectHelper:
         wd.find_element_by_name("name").clear()
         wd.find_element_by_name("name").send_keys(project)
 
-    # def projects_count(self):
-    #     wd = self.app.wd
-    #     self.go_to_project_page_with_project_list()
-    #     return len(wd.find_elements_by_name("selected[]"))
-
-
     def get_list_of_projects(self):
         wd = self.app.wd
-        list = []
+        project_list = []
         self.go_to_project_page_with_project_list()
         for row in wd.find_elements_by_css_selector("table.width100 tr.row-1"):
             cells = row.find_elements_by_tag_name("td")[0]
             name = cells.text
-            list.append(name)
+            project_list.append(name)
         for row in wd.find_elements_by_css_selector("table.width100 tr.row-2"):
             cells = row.find_elements_by_tag_name("td")[0]
             name = cells.text
-            list.append(name)
-        return list
+            project_list.append(name)
+        return project_list
 
 
 
-            #elements = row.find_elements_by_tag_name("td")
 
-       # row = wd.find_element_by_css_selector('[class ="width100"][cellspacing="1"]')
-       # cells = row.find_elements_by_tag_name("td")
-    #             text = cells[0].text
-    #             self.project_cache.append(Project(name=text))
-    #         return list(self.project_cache)
 
 
 
