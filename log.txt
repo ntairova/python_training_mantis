@@ -1,0 +1,104 @@
+/Users/nelya/PycharmProjects/python_training_mantis/.venv/bin/python -X pycache_prefix=/Users/nelya/Library/Caches/JetBrains/PyCharmCE2024.2/cpython-cache /Applications/PyCharm CE.app/Contents/plugins/python-ce/helpers/pydev/pydevd.py --multiprocess --qt-support=auto --client 127.0.0.1 --port 53034 --file /Applications/PyCharm CE.app/Contents/plugins/python-ce/helpers/pycharm/_jb_pytest_runner.py --path /Users/nelya/PycharmProjects/python_training_mantis/test/test_login.py
+Testing started at 13:36 ...
+Connected to pydev debugger (build 242.23339.19)
+Launching pytest with arguments /Users/nelya/PycharmProjects/python_training_mantis/test/test_login.py --no-header --no-summary -q in /Users/nelya/PycharmProjects/python_training_mantis
+
+============================= test session starts ==============================
+collecting ... collected 1 item
+
+test/test_login.py::test_login
+
+=============================== 1 error in 0.41s ===============================
+ERROR                                     [100%]
+test setup failed
+self = <ftputil.host.FTPHost object at 0x7fea38f03bb0>
+
+    def _make_session(self):
+        """
+        Return a new session object according to the current state of
+        this `FTPHost` instance.
+        """
+        # Don't modify original attributes below.
+        args = self._args[:]
+        kwargs = self._kwargs.copy()
+        # If a session factory has been given on the instantiation of
+        # this `FTPHost` object, use the same factory for this
+        # `FTPHost` object's child sessions.
+        factory = kwargs.pop("session_factory", ftplib.FTP)
+        with ftputil.error.ftplib_error_to_ftp_os_error:
+>           return factory(*args, **kwargs)
+
+.venv/lib/python3.9/site-packages/ftputil/host.py:129:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/ftplib.py:123: in __init__
+    self.login(user, passwd, acct)
+/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/ftplib.py:414: in login
+    resp = self.sendcmd('PASS ' + passwd)
+/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/ftplib.py:281: in sendcmd
+    return self.getresp()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <ftplib.FTP object at 0x7fea38f03c40>
+
+    def getresp(self):
+        resp = self.getmultiline()
+        if self.debugging:
+            print('*resp*', self.sanitize(resp))
+        self.lastresp = resp[:3]
+        c = resp[:1]
+        if c in {'1', '2', '3'}:
+            return resp
+        if c == '4':
+            raise error_temp(resp)
+        if c == '5':
+>           raise error_perm(resp)
+E           ftplib.error_perm: 530 Login incorrect.
+
+/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/ftplib.py:254: error_perm
+
+During handling of the above exception, another exception occurred:
+
+request = <SubRequest 'configure_server' for <Function test_login>>
+config = {'ftp': {'host': 'localhost', 'password': 'Welcome12340!', 'username': 'mantis'}, 'web': {'baseUrl': 'http://localhost/mantisbt-1.2.20/'}, 'webadmin': {'password': 'root', 'username': 'administrator'}}
+
+    @pytest.fixture(scope="session", autouse=True)
+    def configure_server(request, config):
+>       install_server_configuration(config['ftp']['host'], config['ftp']['username'], config['ftp']['password'])
+
+conftest.py:36:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+conftest.py:42: in install_server_configuration
+    with ftputil.FTPHost(host, username, password) as remote:
+.venv/lib/python3.9/site-packages/ftputil/host.py:69: in __init__
+    self._session = self._make_session()
+.venv/lib/python3.9/site-packages/ftputil/host.py:129: in _make_session
+    return factory(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <ftputil.error.FtplibErrorToFTPOSError object at 0x7fea38e3f100>
+exc_type = <class 'ftplib.error_perm'>
+exc_value = error_perm('530 Login incorrect.')
+traceback = <traceback object at 0x7fea38f53240>
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if exc_type is None:
+            # No exception
+            return
+        if isinstance(exc_value, ftplib.error_temp):
+            raise TemporaryError(*exc_value.args, original_exception=exc_value)
+        elif isinstance(exc_value, ftplib.error_perm):
+            # If `exc_value.args[0]` is present, assume it's a byte or
+            # unicode string.
+            if (
+              exc_value.args and
+              ftputil.tool.as_unicode(exc_value.args[0]).startswith("502")
+            ):
+                raise CommandNotImplementedError(*exc_value.args)
+            else:
+>               raise PermanentError(*exc_value.args,
+E               ftputil.error.PermanentError: 530 Login incorrect.
+E               Debugging info: ftputil 3.2, Python 3.9.8 (darwin)
+
+.venv/lib/python3.9/site-packages/ftputil/error.py:143: PermanentError
+
+Process finished with exit code 1
