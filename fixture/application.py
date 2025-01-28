@@ -1,5 +1,6 @@
 from selenium import webdriver
 
+from fixture.james import JamesHelper
 from fixture.project import ProjectHelper
 from fixture.session import SessionHelper
 
@@ -8,7 +9,7 @@ from fixture.session import SessionHelper
 
 
 class Application:
-    def __init__(self, browser, base_url):
+    def __init__(self, browser, config):
         self.app = Application
         if browser == "chrome":
             self.wd = webdriver.Chrome()
@@ -19,7 +20,9 @@ class Application:
         else:
             raise ValueError('Unrecognized browser %s' % browser)
         self.session = SessionHelper(self)
-        self.base_url = base_url
+        self.james = JamesHelper(self)
+        self.config = config
+        self.base_url = config['web']['baseUrl']
         self.project = ProjectHelper(self)
 
     def is_valid(self):
