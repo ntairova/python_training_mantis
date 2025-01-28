@@ -7,7 +7,7 @@
     "password": "root"
   },
   "ftp": {
-    "host": "localhost",
+    "host": "127.0.0.1",
     "username": "mantis",
     "password": "Welcome12340!"
   }
