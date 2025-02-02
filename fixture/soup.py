@@ -1,6 +1,12 @@
+import json
+from http.client import responses
+
 from suds.client import Client
 from suds import WebFault
-
+from suds import *
+from suds import sudsobject
+import json
+from suds.sudsobject import asdict, recursive_asdict
 
 
 class SoapHelper:
@@ -17,11 +23,18 @@ class SoapHelper:
 
     def list_of_projects(self, username, password):
         client = Client("http://localhost/mantisbt-1.2.20/api/soap/mantisconnect.php?wsdl")
-        try:
-            res = client.service.mc_projects_get_user_accessible(username, password)
-            return res
-        except WebFault:
-            return False
+        response = client.service.mc_projects_get_user_accessible(username, password)
+        result = []
+        for res in range(len(response)):
+            res = json.dumps(recursive_asdict(response))
+            result.append(res)
+        return result
+
+
+
+
+
+
 
 
 
