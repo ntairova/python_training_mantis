@@ -4,7 +4,6 @@ from fixture.application import Application
 import pytest
 import ftputil
 
-
 fixture = None
 target = None
 
